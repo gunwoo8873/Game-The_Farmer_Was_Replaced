@@ -1,29 +1,52 @@
 from __builtins__ import *
 
-# Items
-# Hay = Entities.Hay
+#########################################
+# Current Ground Size : 4 * 4
+#########################################
+
+# Items <Entities.SeedName>
 Bush = Entities.Bush
 Carrot = Entities.Carrot
+SeedTypes = [Bush, Carrot]
 
-#Default Options
-Harvest = False
-Grassland = True
+# Directions <0=N, 1=E, 2=S, 3=W>
+Directions = [North, East, South, West]
 
+# Functions
+def move_direction(dir):
+    return move(dir)
 
-# Logic
+def range_check(v):
+    return range(v)
 
-def move_direction(n, dir):
-	for i in range(n):
-		move(dir)
+def Locaition_check(x, y):
+    return get_pos_x() == x and get_pos_y() == y
 
-def Harvest_loop():
-	harvest()
+def Bush_Tared():
+    return plant(SeedTypes[0])
 
-def Changed_Grassland(v):
-	plant(v)
+def Carrot_Tared():
+    return till(), plant(SeedTypes[1])
 
+# Loop Logic
 while True:
-	if Harvest:
-		Harvest_loop()
-	if Grassland:
-		Changed_Grassland(Grassland)
+    for _ in range_check(4):
+        move_direction(Directions[0])
+        harvest()
+    move_direction(Directions[1])
+
+    for _ in range_check(4):
+        move_direction(Directions[0])
+        Bush_Tared()
+        
+        if can_harvest():
+            harvest()
+    move_direction(Directions[1])
+
+    for _ in range_check(4):
+        move_direction(Directions[0])
+        Carrot_Tared()
+        
+        if can_harvest():
+            harvest()
+    move_direction(Directions[1])
